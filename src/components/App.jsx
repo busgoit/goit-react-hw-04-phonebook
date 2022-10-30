@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import Section from './Section';
 import Form from './Form';
 import Filter from './Filter';
 import Contacts from './Contacts';
 
+const initialContacts = [
+  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+];
+
+const savedContacts = JSON.parse(localStorage.getItem('localContacts'));
+
 export const App = () => {
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  ]);
+  const [contacts, setContacts] = useState(
+    savedContacts ? savedContacts : initialContacts
+  );
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('localContacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContactOnFormSubmit = data => {
     const { name, number } = data;
